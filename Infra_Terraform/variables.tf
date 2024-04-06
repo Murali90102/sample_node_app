@@ -32,6 +32,9 @@ variable "private_instance_count" {
 variable "instance_type" {
     default = "t2.micro"
 }
+variable "jenkins_instance_type"{
+    default = "t2.medium"
+}
 variable "instance_ami" {
     # default = "ami-026b57f3c383c2eec" ## amazon linux
     default = "ami-0c1704bac156af62c"   ## Ubuntu

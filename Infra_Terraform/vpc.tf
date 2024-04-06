@@ -124,6 +124,13 @@ resource "aws_security_group" "sg-ssh" {
     description = "Allow workstation IP"
     cidr_blocks = [local.workstation_external_ip]   ## YOUR EXTERNAL IP WILL BE ADDED
   }
+  ingress {
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
+    description = "Allow Jenkins IP"
+    cidr_blocks = ["18.0.0.0/16"]   ##
+  }
   egress {
     from_port   = 0
     to_port     = 0

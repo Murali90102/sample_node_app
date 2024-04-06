@@ -28,7 +28,7 @@ resource "aws_instance" "public-ec2" {
   ami                    = var.instance_ami
   instance_type          = var.instance_type
   key_name               = aws_key_pair.tf-ssh-key.key_name
-  vpc_security_group_ids = [aws_security_group.sg.id, aws_security_group.sg-http-https.id]
+  vpc_security_group_ids = [aws_security_group.sg.id, aws_security_group.sg-http-https.id, aws_security_group.sg-ssh.id]
   tags = {
     Name = "${var.environment}-vm-${count.index}"
   }
@@ -49,7 +49,7 @@ resource "aws_instance" "public-ec2" {
 resource "aws_instance" "jenkins-ec2" {
   count = 1
   ami                    = var.instance_ami
-  instance_type          = var.instance_type
+  instance_type          = var.jenkins_instance_type
   key_name               = aws_key_pair.tf-ssh-key.key_name
   vpc_security_group_ids = [aws_security_group.sg-jenkins.id, aws_security_group.sg-ssh.id]
   tags = {
@@ -68,12 +68,15 @@ resource "aws_instance" "jenkins-ec2" {
   /etc/apt/sources.list.d/jenkins.list > /dev/null
   apt-get update -y
   apt-get install -y jenkins
+  curl -fsSl https://get.docker.com | bash
+  usermod -aG docker jenkins
+  systemctl restart docker
   
   EOF
 }
 
 # ########################################
-# ######    CREATE Public EC2
+# ######    CREATE Private EC2
 # ########################################
 resource "aws_instance" "private-ec2" {
   count = var.private_instance_count
