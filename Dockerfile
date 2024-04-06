@@ -1,4 +1,4 @@
-FROM lts-alpine3.18
+FROM node:lts-alpine3.18
 WORKDIR /app
 COPY *.json .
 RUN npm install
