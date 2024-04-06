@@ -1,6 +1,6 @@
 services:
   sample_node_app:
     container_name: sample_node_app
-    image: murali90102/sample_node_app:${BUILD_ID}
+    image: murali90102/sample_node_app:BUILD_ID
     ports:
     - 3000:3000
