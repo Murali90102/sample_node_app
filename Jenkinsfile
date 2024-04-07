@@ -8,7 +8,12 @@ pipeline {
     stages {
         stage('SCM Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Murali90102/sample_node_app.git'
+                cleanWs()
+                //git branch: 'main', url: 'https://github.com/Murali90102/sample_node_app.git'
+
+                // checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'UserExclusion', excludedUsers: 'jenkins_build_user']], userRemoteConfigs: [[credentialsId: 'githubCreds', url: 'https://github.com/Murali90102/sample_node_app.git']])
+            
+                checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'UserExclusion', excludedUsers: 'jenkins_build_user'], [$class: 'PathRestriction', excludedRegions: 'Jenkinsfile', includedRegions: '']], userRemoteConfigs: [[credentialsId: 'githubCreds', url: 'https://github.com/Murali90102/sample_node_app.git']])
             }
 		}
         stage("Docker build"){
@@ -32,7 +37,9 @@ pipeline {
                 sh "sed -i \"s#${REPO}/${IMAGE_NAME}:.*#${REPO}/${IMAGE_NAME}:${TAG}#1\" docker-compose.yaml"
 
                 sh 'git config --local user.email "muralikrishna.appari@outlook.com"'
-                sh 'git config --local user.name "murali90102"'
+                // sh 'git config --local user.name "murali90102"'
+                sh 'git config --local user.name "jenkins_build_user"'
+                
                 sh "git status"
 
                 withCredentials([usernamePassword(credentialsId: 'githubCreds', passwordVariable: 'ghPassword', usernameVariable: 'ghUsername')]) {
@@ -40,10 +47,10 @@ pipeline {
                     
                 }
 
-
+                
                 sh "git add docker-compose.yaml"
                 sh "git commit -m 'Updated docker-compose.yaml from CI'"
-                sh 'git push origin main'
+                sh 'git push origin HEAD:main'
 			}
 		}
 		stage('Deploy to VM') {
