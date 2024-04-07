@@ -9,7 +9,6 @@ pipeline {
         stage('SCM Checkout') {
             steps {
                 cleanWs()
-                sh "echo Testing jenkinsfile ignore"
                 //git branch: 'main', url: 'https://github.com/Murali90102/sample_node_app.git'
 
                 // checkout scmGit(branches: [[name: '*/main']], extensions: [[$class: 'UserExclusion', excludedUsers: 'jenkins_build_user']], userRemoteConfigs: [[credentialsId: 'githubCreds', url: 'https://github.com/Murali90102/sample_node_app.git']])
