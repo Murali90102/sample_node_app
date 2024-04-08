@@ -1,8 +1,4 @@
 # sample_node_app
-
-test4
-
-
-test2
+# All the steps and instructions are provided in the report document. Please find it.
 
 
